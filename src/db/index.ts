@@ -5,23 +5,47 @@ export const pool = new Pool({
 })
 export const initDb=async()=>{
 try {
- await pool.query(`
-    CREATE TABLE IF NOT EXISTS users(
+await pool.query(`
+  CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(20) NOT NULL,
-  email VARCHAR(30) UNIQUE NOT NULL,
+    name VARCHAR(20),
+    email VARCHAR(30) UNIQUE NOT NULL,
     password TEXT NOT NULL,
-  role VARCHAR(20)
-    DEFAULT 'contributor'
-    CHECK (role IN ('contributor', 'maintainer')),
+
+    role VARCHAR(20)
+      DEFAULT 'contributor'
+      CHECK (role IN ('contributor', 'maintainer')),
+
     created_at TIMESTAMP DEFAULT NOW(),
-    updated_at TIMESTAMP DEFAULT NOW(),
-    CONSTRAINT users_email_unique UNIQUE(email)
+    updated_at TIMESTAMP DEFAULT NOW()
   )
-    
-    `)   
-    console.log("success fully")
+`)
+await pool.query(`
+CREATE TABLE IF NOT EXISTS issues (
+  id SERIAL PRIMARY KEY,
+
+  title VARCHAR(150) NOT NULL,
+
+  description TEXT NOT NULL,
+
+
+  type VARCHAR(20) NOT NULL
+    CHECK (type IN ('bug', 'feature_request')),
+
+  status VARCHAR(20) DEFAULT 'open'
+    CHECK (status IN ('open', 'in_progress', 'resolved')),
+
+  reporter_id INT NOT NULL,
+
+  created_at TIMESTAMP DEFAULT NOW(),
+
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+`)
+
 } catch (error) {
-    console.log(error)
+throw Error("Some thing is Wrong in Db")
 }
 }
+
+

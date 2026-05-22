@@ -4,4 +4,3 @@ import { UserController } from "./user.controller";
 const router = Router()
 export const UserRout =router
 router.post('/signup', UserController.CreatUser)
-router.post('/login', UserController.CreatUser)

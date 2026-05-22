@@ -1,14 +1,20 @@
-import type { Request, Response } from "express"
+import type { NextFunction, Request, Response } from "express"
 import { loginService } from "./login.service"
+
 
 const loginUser=async(req:Request,res:Response)=>{
 try {
-const result =await loginService.loginUserIntoService(req.body)
+const result = await loginService.loginUserIntoService(req.body)
 
+// res.cookie("resfeshToken",resfreshToken,{
+//     secure:false,
+//     httpOnly:true,
+//     sameSite:"lax"
+// })
   res.status(201).json({
     success: true,
     message: "Login successful",
-    // data: result
+    data: result
   })
 
 } catch (error:any) {
@@ -19,6 +25,7 @@ const result =await loginService.loginUserIntoService(req.body)
   })
 
 }
+
 }
 export const logincontroller ={
     loginUser
